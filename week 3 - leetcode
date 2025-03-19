@@ -1,0 +1,44 @@
+bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize) {
+    int adjMatrix[numCourses][numCourses];
+    int inDegree[numCourses];
+
+    for (int i=0;i<numCourses;i++){
+        inDegree[i]=0;
+        for(int j=0;j<numCourses;j++){
+            adjMatrix[i][j]=0;
+        }
+    }
+
+    for (int i=0;i<prerequisitesSize;i++){
+        int course=prerequisites[i][0];
+        int prereq=prerequisites[i][1];
+        adjMatrix[prereq][course]=1;
+        inDegree[course]++;
+    }
+
+    int queue[numCourses];
+    int front=0,rear=0;
+
+    for (int i=0;i<numCourses;i++){
+        if(inDegree[i]==0){
+            queue[rear++]=i;
+        }
+    }
+
+    int processedCourses=0;
+
+    while (front<rear){
+        int course=queue[front++];
+        processedCourses++;
+
+        for (int i=0;i<numCourses;i++){
+            if(adjMatrix[course][i]==1){
+                inDegree[i]--;
+                if(inDegree[i]==0) {
+                    queue[rear++]=i;
+                }
+            }
+        }
+    }
+    return processedCourses==numCourses;
+}
